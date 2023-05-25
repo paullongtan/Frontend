@@ -18,6 +18,7 @@ const useInfo = () => useContext(InfoContext)
 const InfoProvider = (props) => {
 
     const getAllMovies = () => {
+        // const {data: {}} = axios.get('/', {he})
         const array = [
             {movie_id: "aqua", pic_url: aqua}, 
             {movie_id: "avengers", pic_url: avengers}, 

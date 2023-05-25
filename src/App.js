@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
 import './App.css';
 import { Routes, Route, Outlet } from "react-router-dom";
 import { useInfo } from './containers/hooks/useInfo';
-import { Directions } from '@mui/icons-material';
 
 const CustomButton = styled.button`
       background-color: #5E5E5E;

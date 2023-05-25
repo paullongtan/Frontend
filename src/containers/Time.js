@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import { useTheme } from '@mui/material/styles';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { styled } from '@mui/system';
@@ -51,6 +52,7 @@ const get_text = (element) => {
 const Time = () => {
     const { getTime } = useInfo()
 
+    const theme = useTheme();
     const location = useLocation();
     const movie = (location.pathname + location.search).split("/")[1];
     const alltimes = getTime(movie).sort((a, b) => a.movie_starttime - b.movie_starttime)
@@ -69,12 +71,13 @@ const Time = () => {
                 ))}
             </div>
             <List>
-                {times ? times.map((ele, i) => (
-                    <ListItem disablePadding key = {i} sx={{ backgroundColor: "#F0F0F0" }}>
-                        <ListItemButton component="a" onClick={() => {navigate("../book");}}>
-                        <ListItemText primary={get_text(ele)} />
-                        </ListItemButton>
-                    </ListItem>
+            {times ? times.map((ele, i) => (
+                <div key={i} style={{ backgroundColor: "#F0F0F0" }}>
+                    <div style={{ display: 'flex', height: 60, justifyContent: 'space-around', alignItems: 'center' }}>
+                        <ListItemText primary={get_text(ele)} primaryTypographyProps={{ style: { fontSize: '20px' } }}/>
+                        <Button onClick={() => navigate("../book")} sx={{fontSize: 20}}>去訂票</Button>
+                    </div>
+                </div>
                 )) : <div>Not Found!</div>}
             </List>
         </>
