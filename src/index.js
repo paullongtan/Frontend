@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { InfoProvider } from './containers/hooks/useInfo';
-import { TimeProvider } from './containers/hooks/useTime';
-import { BookProvider } from './containers/hooks/useBook';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -13,11 +11,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <InfoProvider>
-        <TimeProvider>
-          <BookProvider>
-            <App />
-          </BookProvider>
-        </TimeProvider>
+        <App />
       </InfoProvider>
     </BrowserRouter>
   </React.StrictMode>
