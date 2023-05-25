@@ -11,16 +11,23 @@ import { useNavigate } from 'react-router-dom';
 import './App.css';
 import { Routes, Route, Outlet } from "react-router-dom";
 import { useInfo } from './containers/hooks/useInfo';
+import { Directions } from '@mui/icons-material';
 
 const CustomButton = styled.button`
       background-color: #5E5E5E;
       color: white;
       margin: 0 10px;
       padding: 10px 20px;
-      font-size: 16px;
+      border-radius: 20px;
+      height: 50px;
+      font-size: 20px;
       border: none;
       outline: none;
       cursor: pointer;
+      &:hover {
+        background-color: white;
+        color: #5E5E5E;
+      }
 `;
 
 function App() {
@@ -28,7 +35,7 @@ function App() {
     const navigate = useNavigate()
     return (
         <div>
-            <div style={{ display: 'flex', backgroundColor: "#5E5E5E" }}>
+            <div style={{ display: 'flex', flexDirection:'row', alignItems: 'center', height: 70, backgroundColor: "#5E5E5E" }}>
                 <CustomButton onClick={() => {navigate(".")}}>電影介紹</CustomButton>
                 <CustomButton onClick={() => {navigate("./time")}}>電影時刻</CustomButton>
             </div>
