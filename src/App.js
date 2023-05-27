@@ -1,13 +1,12 @@
 import Show from './components/Home';
 import Navbar from './components/Navbar';
-import SignIn from './components/Login';
-import SignUp from './components/SignUp';
 import Information from './components/Information';
 import Seat from './containers/Seat';
 import React from 'react';
 import Time from './containers/Time'
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import User from './containers/UserInfo';
 import './App.css';
 import { Routes, Route, Outlet } from "react-router-dom";
 import { useInfo } from './containers/hooks/useInfo';
@@ -58,9 +57,7 @@ function App() {
               <Route key={4*i+3} path="book" element={<Seat />} />
             </Route>
           ))}
-          <Route path="/LogIn" element={<SignIn />} />
-          <Route path="/SignUp" element={<SignUp />} />
-          
+          <Route path="/users/reservation" element={<User />} />
       </Routes>
     </>
   );

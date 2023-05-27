@@ -11,11 +11,161 @@ const InfoContext = createContext({
     getTime: () => {},
     getAllMovies: () => {},
     getSeat: () => {},
+    getReservers: () => {},
 })
 
 const useInfo = () => useContext(InfoContext)
 
 const InfoProvider = (props) => {
+    const getReservers = () => {
+        const array = [
+            {
+                title: "水行俠",
+                movie_starttime: new Date(2023, 5, 21, 20, 30, 0),
+                seats: [100, 15, 16, 17],
+                cinema: 10,
+            },
+            {
+                title: "憤怒鳥玩電影",
+                movie_starttime: new Date(2023, 5, 22, 12, 30, 0),
+                seats: [29, 23, 17],
+                cinema: 3,
+            },
+            {
+                title: "復仇者聯盟：終局之戰",
+                movie_starttime: new Date(2023, 5, 24, 17, 0, 0),
+                seats: [93, 19, 25, 78],
+                cinema: 8,
+            },
+            {
+                title: "西遊記之大聖歸來",
+                movie_starttime: new Date(2023, 5, 26, 13, 30, 0),
+                seats: [34, 15, 78, 17],
+                cinema: 5,
+            },
+            {
+                title: "水行俠",
+                movie_starttime: new Date(2023, 5, 21, 13, 30, 0),
+                seats: [54, 78, 13, 17],
+                cinema: 3,
+            },
+            {
+                title: "復仇者聯盟：終局之戰",
+                movie_starttime: new Date(2023, 5, 16, 12, 30, 0),
+                seats: [100, 15, 16, 17],
+                cinema: 8,
+            },
+            {
+                title: "水行俠",
+                movie_starttime: new Date(2023, 5, 21, 20, 30, 0),
+                seats: [100, 15, 16, 17],
+                cinema: 10,
+            },
+            {
+                title: "憤怒鳥玩電影",
+                movie_starttime: new Date(2023, 5, 22, 12, 30, 0),
+                seats: [29, 23, 28, 17],
+                cinema: 3,
+            },
+            {
+                title: "復仇者聯盟：終局之戰",
+                movie_starttime: new Date(2023, 5, 24, 17, 0, 0),
+                seats: [93, 19, 25, 78],
+                cinema: 8,
+            },
+            {
+                title: "西遊記之大聖歸來",
+                movie_starttime: new Date(2023, 5, 26, 13, 30, 0),
+                seats: [34, 15, 78, 17],
+                cinema: 5,
+            },
+            {
+                title: "水行俠",
+                movie_starttime: new Date(2023, 5, 21, 13, 30, 0),
+                seats: [54, 78, 13, 17],
+                cinema: 3,
+            },
+            {
+                title: "復仇者聯盟：終局之戰",
+                movie_starttime: new Date(2023, 5, 16, 12, 30, 0),
+                seats: [100, 15, 16, 17],
+                cinema: 8,
+            },
+            {
+                title: "水行俠",
+                movie_starttime: new Date(2023, 5, 21, 20, 30, 0),
+                seats: [100, 15, 16, 17],
+                cinema: 10,
+            },
+            {
+                title: "憤怒鳥玩電影",
+                movie_starttime: new Date(2023, 5, 22, 12, 30, 0),
+                seats: [29, 23, 28, 17],
+                cinema: 3,
+            },
+            {
+                title: "復仇者聯盟：終局之戰",
+                movie_starttime: new Date(2023, 5, 24, 17, 0, 0),
+                seats: [93, 19, 25, 78],
+                cinema: 8,
+            },
+            {
+                title: "西遊記之大聖歸來",
+                movie_starttime: new Date(2023, 5, 26, 13, 30, 0),
+                seats: [34, 15, 78, 17],
+                cinema: 5,
+            },
+            {
+                title: "水行俠",
+                movie_starttime: new Date(2023, 5, 21, 13, 30, 0),
+                seats: [54, 78, 13, 17],
+                cinema: 3,
+            },
+            {
+                title: "復仇者聯盟：終局之戰",
+                movie_starttime: new Date(2023, 5, 16, 12, 30, 0),
+                seats: [100, 15, 16, 17],
+                cinema: 8,
+            },
+            {
+                title: "水行俠",
+                movie_starttime: new Date(2023, 5, 21, 20, 30, 0),
+                seats: [100, 15, 16, 17],
+                cinema: 10,
+            },
+            {
+                title: "憤怒鳥玩電影",
+                movie_starttime: new Date(2023, 5, 22, 12, 30, 0),
+                seats: [29, 23, 17],
+                cinema: 3,
+            },
+            {
+                title: "復仇者聯盟：終局之戰",
+                movie_starttime: new Date(2023, 5, 24, 17, 0, 0),
+                seats: [93, 19, 78],
+                cinema: 8,
+            },
+            {
+                title: "西遊記之大聖歸來",
+                movie_starttime: new Date(2023, 5, 26, 13, 30, 0),
+                seats: [34, 15, 78, 17],
+                cinema: 5,
+            },
+            {
+                title: "水行俠",
+                movie_starttime: new Date(2023, 5, 21, 13, 30, 0),
+                seats: [54, 78, 13, 17],
+                cinema: 3,
+            },
+            {
+                title: "復仇者聯盟：終局之戰",
+                movie_starttime: new Date(2023, 5, 16, 12, 30, 0),
+                seats: [100, 15, 16, 17, 23],
+                cinema: 8,
+            },
+        ]
+        return array
+    }
 
     const getAllMovies = () => {
         // const {data: {}} = axios.get('/', {he})
@@ -479,6 +629,7 @@ const InfoProvider = (props) => {
                 getTime,
                 getAllMovies,
                 getSeat,
+                getReservers,
             }}
             {...props}
         />

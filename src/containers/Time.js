@@ -4,9 +4,6 @@ import { useInfo } from "./hooks/useInfo";
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import { useTheme } from '@mui/material/styles';
-import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { styled } from '@mui/system';
 import { useLocation } from 'react-router-dom';
@@ -52,7 +49,6 @@ const get_text = (element) => {
 const Time = () => {
     const { getTime } = useInfo()
 
-    const theme = useTheme();
     const location = useLocation();
     const movie = (location.pathname + location.search).split("/")[1];
     const alltimes = getTime(movie).sort((a, b) => a.movie_starttime - b.movie_starttime)

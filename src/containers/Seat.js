@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useInfo } from "./hooks/useInfo";
 import { Button } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 
 const getColor = (number) => {
     if (number === 0)
@@ -41,8 +42,8 @@ const Seat = () => {
     const occupied = getSeat();
 
     const theme = useTheme();
-    const location = useLocation();
-    const movie = (location.pathname + location.search).split("/")[1];
+    
+    const navigate = useNavigate();
     let len_of_occupied = occupied.length
 
     const [array, setArray] = useState(() => {
@@ -150,7 +151,7 @@ const Seat = () => {
                             backgroundColor: theme.palette.primary.dark
                         }
                     }}
-                    onClick={() => {console.log(books)}}
+                    onClick={() => {console.log(books); navigate('..'); }}
                 >送出訂單</Button>
             </div>
         </>
