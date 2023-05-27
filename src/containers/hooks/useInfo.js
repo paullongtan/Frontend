@@ -5,6 +5,9 @@ import monkey from '../../movies/super.jpg';
 import fast from '../../movies/fast.jpg';
 import matrix from '../../movies/matrix.jpg';
 import angry from '../../movies/angry.jpg';
+import axios from "axios";
+
+const instance = axios.create({ baseURL: process.env.REACT_APP_BASE_URL })
 
 const InfoContext = createContext({
     getIntro: () => {},
@@ -12,6 +15,7 @@ const InfoContext = createContext({
     getAllMovies: () => {},
     getSeat: () => {},
     getReservers: () => {},
+    bookSeat: () => {},
 })
 
 const useInfo = () => useContext(InfoContext)
@@ -622,6 +626,11 @@ const InfoProvider = (props) => {
         return [1, 3, 5, 173, 188]
     }
 
+    const bookSeat = (books) => {
+        console.log(instance, books)
+        console.log(process.env.REACT_APP_BASE_URL)
+    }
+
     return (
         <InfoContext.Provider
             value={{
@@ -630,6 +639,7 @@ const InfoProvider = (props) => {
                 getAllMovies,
                 getSeat,
                 getReservers,
+                bookSeat,
             }}
             {...props}
         />

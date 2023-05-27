@@ -5,6 +5,7 @@ import { useInfo } from "./hooks/useInfo";
 import { Button } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
+import { Snackbar } from '@mui/material';
 // import { useLocation } from "react-router-dom";
 
 const getColor = (number) => {
@@ -23,8 +24,8 @@ const StyledButton = styled.button`
   cursor: pointer;
   padding: 10px 10px;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: ${props => props.width}px;
+  height: ${props => props.height}px;
   margin: 10px;
 `;
 
@@ -38,7 +39,9 @@ const Unsee = styled.div`
 `
 
 const Seat = () => {
-    const { getSeat } = useInfo()
+    const { getSeat, bookSeat } = useInfo()
+    const [open, setOpen] = useState(false);
+
     const occupied = getSeat();
 
     const theme = useTheme();
@@ -91,47 +94,83 @@ const Seat = () => {
         setArray(updatedArray)
     }
 
+    const handleOpen = () => {
+        setOpen(true);
+    };
+    
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const sendBook = (books) => {
+        if (books.length === 0){
+            handleOpen()
+        }
+        else{
+            bookSeat(books)
+            navigate('..')
+        }
+    }
+
     const Blank = ({ele, i, j, click }) => {
         return(
             <>
                 <Unsee />
-                <StyledButton number={ele} i={i} j={j} onClick={() => {click(ele, i, j)}}/>
+                <StyledButton number={ele} i={i} j={j} width={15} height={15} onClick={() => {click(ele, i, j)}}/>
             </>
         )
     }
     
     return(
         <>
+            <Snackbar
+                open={open}
+                onClose={handleClose}
+                message="訂票不能為空"
+                autoHideDuration={1500}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center'
+                }}
+            />
+            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 10, marginBottom: 10 }}>
+                <StyledButton width={5} height={5} number={0}/>
+                <div>未售出</div>
+                <StyledButton width={5} height={5} number={1}/>
+                <div>您的位置</div>
+                <StyledButton width={5} height={5} number={2}/>
+                <div>已售出</div>
+            </div>
             <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <div>
                     {array.map((element, i) => (
                         (i % 10 === 4) ? 
                             <div key={"test"}>
-                                <div key = {`blank-${i}`} style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                                <div key = {`blank-${i}`} style={{height: 45, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                                         {element.map((ele, j) => 
                                             <Unsee key = {`${i}-${j}`}/>
                                         )}
                                     </div>
-                                <div key = {i} style={{height: 50, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                                <div key = {i} style={{height: 45, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                                     {element.map((ele, j) => 
                                         (j % 20 === 4 || j % 20 === 15) ? 
                                         <Blank key = {`blank-${i}-${j}`} ele={ele} i={i} j={j} click={click} />
-                                        : <StyledButton key = {`square-${i}-${j}`} number={ele} i={i} j={j} onClick={() => {click(ele, i, j)}}/>
+                                        : <StyledButton key = {`square-${i}-${j}`} number={ele} i={i} j={j} width={15} height={15} onClick={() => {click(ele, i, j)}}/>
                                     )}
                                 </div>
                             </div>
                             :
-                            <div key = {i} style={{height: 60, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                            <div key = {i} style={{height: 45, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                                 {element.map((ele, j) => 
                                     (j % 20 === 4 || j % 20 === 15) ? 
                                     <Blank key = {`blank-${i}-${j}`} ele={ele} i={i} j={j} click={click}/>
-                                    : <StyledButton key = {`square-${i}-${j}`} number={ele} i={i} j={j} onClick={() => {click(ele, i, j)}}/>
+                                    : <StyledButton key = {`square-${i}-${j}`} number={ele} i={i} j={j} width={15} height={15} onClick={() => {click(ele, i, j)}}/>
                                 )}
                             </div>
                     ))}
                 </div>
             </div>
-            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
                 <Button 
                     sx={{
                         backgroundColor: theme.palette.primary.main, 
@@ -151,7 +190,7 @@ const Seat = () => {
                             backgroundColor: theme.palette.primary.dark
                         }
                     }}
-                    onClick={() => {console.log(books); navigate('..'); }}
+                    onClick={() => { sendBook(books); }}
                 >送出訂單</Button>
             </div>
         </>
