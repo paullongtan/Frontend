@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useInfo } from "./hooks/useInfo";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -18,14 +18,14 @@ const Text = ( number ) => {
     return i.toString() + "排" + j.toString() + "號"
 }
 
-const Time = ( datetime ) => {
-    const year = datetime.getFullYear().toString();
-    const month = (datetime.getMonth() + 1).toString(); // 月份從 0 開始，需要加 1
-    const day = datetime.getDate().toString();
+const Time = ( date ) => {
+    const datetime = new Date(date)
+    const year = datetime.getUTCFullYear().toString();
+    const month = (datetime.getUTCMonth() + 1).toString();
+    const day = datetime.getUTCDate().toString();
 
-    // 取得時、分、秒
-    const hours = datetime.getHours().toString();
-    const minutes = datetime.getMinutes().toString().padStart(2, '0');
+    const hours = datetime.getUTCHours().toString();
+    const minutes = datetime.getUTCMinutes().toString().padStart(2, '0');
     
     return year + "-" + month + "-" + day + " " + hours + ":" + minutes
 }
@@ -51,8 +51,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   }));
 
 const User = () => {
-    const { getReservers } = useInfo()
-    const reservations = getReservers()
+    const { user_id, getReservers } = useInfo()
+    const [reservations, setReservations] = useState([])
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -72,52 +72,65 @@ const User = () => {
         }, 0);
     };
 
-  return (
-    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <h2>Your Reservations</h2>
-        <TableContainer component={Paper} sx={{width: '70%'}}>
-            <Table aria-label="customized table">
-                <TableHead>
-                    <StyledTableRow>
-                        <StyledTableCell>Movie Title</StyledTableCell>
-                        <StyledTableCell align="center">Movie Start Time</StyledTableCell>
-                        <StyledTableCell align="center">Movie Seats</StyledTableCell>
-                        <StyledTableCell align="center">Cinema</StyledTableCell>
-                    </StyledTableRow>
-                </TableHead>
-                <TableBody>
-                    {reservations.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => (
-                        <StyledTableRow
-                        key={`row ${i}`}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <StyledTableCell component="th" scope="row">
-                                {row.title}
-                            </StyledTableCell>
-                            {/* <StyledTableCell align="right">{row.title}</StyledTableCell> */}
-                            <StyledTableCell align="center">{Time(row.movie_starttime)}</StyledTableCell>
-                            <StyledTableCell sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>{
-                                row.seats.map((ele, j) => (
-                                    <Chip key={`${i}-${j}`} label={Text(ele)} color="primary" sx={{margin: 1, boxShadow: '0 0 8px green', color: "white"}}/>
-                                ))}</StyledTableCell>
-                            <StyledTableCell align="center">{row.cinema}</StyledTableCell>
+    useEffect(() => {
+        const fetchReservations = async() => {
+            if (!user_id){
+                setReservations([])
+            }
+            else{
+                let reserves = await getReservers(user_id);
+                setReservations(reserves)
+            }
+        }
+        fetchReservations();
+        setPage(0);
+    }, [getReservers, user_id])
+
+    return (
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <h2>Your Reservations</h2>
+            <TableContainer component={Paper} sx={{width: '70%'}}>
+                <Table aria-label="customized table">
+                    <TableHead>
+                        <StyledTableRow>
+                            <StyledTableCell>Movie Title</StyledTableCell>
+                            <StyledTableCell align="center">Movie Start Time</StyledTableCell>
+                            <StyledTableCell align="center">Movie Seats</StyledTableCell>
+                            <StyledTableCell align="center">Cinema</StyledTableCell>
                         </StyledTableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-        <TablePagination
-            rowsPerPageOptions={[5, 10]}
-            component="div"
-            count={reservations.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-    </div>
-    
-  );
+                    </TableHead>
+                    <TableBody>
+                        {reservations.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => (
+                            <StyledTableRow
+                            key={`row ${i}`}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                                <StyledTableCell component="th" scope="row">
+                                    {row.title}
+                                </StyledTableCell>
+                                {/* <StyledTableCell align="right">{row.title}</StyledTableCell> */}
+                                <StyledTableCell align="center">{Time(row.movie_start_time)}</StyledTableCell>
+                                <StyledTableCell sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>{
+                                    row.seats.map((ele, j) => (
+                                        <Chip key={`${i}-${j}`} label={Text(ele.seat_number)} color="primary" sx={{margin: 1, boxShadow: '0 0 8px green', color: "white"}}/>
+                                    ))}</StyledTableCell>
+                                <StyledTableCell align="center">{row.cinema_id}</StyledTableCell>
+                            </StyledTableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <TablePagination
+                rowsPerPageOptions={[5, 10]}
+                component="div"
+                count={reservations.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+        </div>   
+    );
 }
 
 export default User

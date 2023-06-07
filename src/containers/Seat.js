@@ -1,22 +1,22 @@
 import React from "react";
 import styled from 'styled-components';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useInfo } from "./hooks/useInfo";
 import { Button } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Snackbar } from '@mui/material';
-// import { useLocation } from "react-router-dom";
+
+import Alert from '@material-ui/lab/Alert';
 
 const getColor = (number) => {
     if (number === 0)
         return "#00BFFF"
-        // return "#00FA9A"
     else if (number === 1)
         return "#FFFF2C"
     else if (number === 2)
         return "#EE2222"
-        // return "#DC243C"
 }
 
 const StyledButton = styled.button`
@@ -24,8 +24,8 @@ const StyledButton = styled.button`
   cursor: pointer;
   padding: 10px 10px;
   border-radius: 50%;
-  width: ${props => props.width}px;
-  height: ${props => props.height}px;
+  width: 20px;
+  height: 20px;
   margin: 10px;
 `;
 
@@ -39,17 +39,38 @@ const Unsee = styled.div`
 `
 
 const Seat = () => {
-    const { getSeat, bookSeat } = useInfo()
-    const [open, setOpen] = useState(false);
-
-    const occupied = getSeat();
+    const { logged_in, user_id, getSeat, bookSeat } = useInfo()
+    
 
     const theme = useTheme();
-    
+    const location = useLocation();
     const navigate = useNavigate();
+    const showtime_id = (location.pathname + location.search).split("/")[3];
+    const cinema_id = (location.pathname + location.search).split("/")[4];
+    const [occupied, setOccupied] = useState([])
+    const [array, setArray] = useState([])
+    const [open, setOpen] = useState(false);
+    const [booked, setBooked] = useState(false)
+    const [books, setBooks] = useState([])
+    const [message, setMessage] = useState("")
+    const [success, setSuccess] = useState(false)
+
     let len_of_occupied = occupied.length
 
-    const [array, setArray] = useState(() => {
+    useEffect(() => {
+        const fetchBooks = async () => {
+            try {
+                let occupy = await getSeat(showtime_id);
+                setOccupied(occupy)
+            } catch (err) {
+                console.error(err);
+                throw new Error("無法獲取電影資料");
+            }
+        }
+        fetchBooks();
+    }, [getSeat, showtime_id])
+
+    useEffect(() => {
         const initialArray = [];
         for (let i = 0; i < 10; i++) {
           initialArray.push([]);
@@ -58,15 +79,47 @@ const Seat = () => {
           }
         }
         for (let k = 0; k < len_of_occupied; k++) {
-          let id = occupied[k] - 1;
+          let id = occupied[k].seat_number - 1;
           let i = Math.floor(id / 20);
           let j = id % 20;
           initialArray[i][j] = 2;
         }
-        return initialArray;
-    });
+        setArray(initialArray)
+    }, [occupied, len_of_occupied])
 
-    const [books, setBooks] = useState([])
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        if (booked){
+            navigate('..')
+        }
+    };
+
+    const sendBook = async(seat_numbers) => {
+        if (seat_numbers.length === 0){
+            setMessage("訂票不能為空！")
+            handleOpen()
+        }
+        else if (!logged_in || !user_id){
+            setMessage("登入後即可進行訂票操作！")
+            handleOpen()
+        }
+        else{
+            setBooked(true)
+            try{
+                await bookSeat({user_id, showtime_id, cinema_id, seat_numbers})
+                setSuccess(true)
+                setMessage("訂票處理中！")
+                handleOpen()
+            }catch(err) {
+                setMessage("訂票失敗！！")
+                handleOpen()
+            }
+        }
+    }
 
     const clearSeat = () => {
         setBooks([])
@@ -94,24 +147,6 @@ const Seat = () => {
         setArray(updatedArray)
     }
 
-    const handleOpen = () => {
-        setOpen(true);
-    };
-    
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const sendBook = (books) => {
-        if (books.length === 0){
-            handleOpen()
-        }
-        else{
-            bookSeat(books)
-            navigate('..')
-        }
-    }
-
     const Blank = ({ele, i, j, click }) => {
         return(
             <>
@@ -123,16 +158,17 @@ const Seat = () => {
     
     return(
         <>
-            <Snackbar
-                open={open}
-                onClose={handleClose}
-                message="訂票不能為空"
-                autoHideDuration={1500}
+            
+            <Snackbar open={open} autoHideDuration={1500} onClose={handleClose} 
                 anchorOrigin={{
                     vertical: 'top',
                     horizontal: 'center'
-                }}
-            />
+                }}>
+                <Alert severity = {success ? "success" : "error"}>
+                    {message}
+                </Alert>
+            </Snackbar>
+            
             <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 10, marginBottom: 10 }}>
                 <StyledButton width={5} height={5} number={0}/>
                 <div>未售出</div>
@@ -190,6 +226,7 @@ const Seat = () => {
                             backgroundColor: theme.palette.primary.dark
                         }
                     }}
+                    disabled={booked}
                     onClick={() => { sendBook(books); }}
                 >送出訂單</Button>
             </div>
