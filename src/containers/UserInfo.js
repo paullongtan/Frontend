@@ -56,7 +56,7 @@ const User = () => {
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-
+    
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
         setTimeout(() => {

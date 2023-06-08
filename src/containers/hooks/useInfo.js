@@ -1,8 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios"
 import { gapi } from 'gapi-script';
-import cors from 'cors';
-
 
 const CLIENT_ID = process.env.REACT_APP_CLIENT_ID
 
@@ -27,8 +25,7 @@ const useInfo = () => useContext(InfoContext)
 const InfoProvider = (props) => {
     const [logged_in, set_logged_in] = useState(false)
     const [user_id, setUser_id] = useState(undefined)
-    // const [logged_in, set_logged_in] = useState(true)
-    // const [user_id, setUser_id] = useState(1)
+
     useEffect(() => {
         const start = () => {
             gapi.client.init({
@@ -80,7 +77,7 @@ const InfoProvider = (props) => {
             return movie;
         }catch(err){
             console.error(err);
-            // throw new Error("無法獲取該部電影資料");
+            throw new Error("無法獲取該部電影資料");
         }
     }
 
@@ -90,7 +87,7 @@ const InfoProvider = (props) => {
             return showtimes;
         }catch(err){
             console.error(err);
-            // throw new Error("無法獲取該部電影時間資訊");
+            throw new Error("無法獲取該部電影時間資訊");
         }
     }
 
@@ -100,7 +97,7 @@ const InfoProvider = (props) => {
             return seats;
         }catch(err){
             console.error(err);
-            // throw new Error("無法獲取該部電影時間資訊");
+            throw new Error("無法獲取該部電影時間資訊");
         }
     }
 
@@ -117,10 +114,9 @@ const InfoProvider = (props) => {
     const onSuccess = async res => {
         console.log("LOGIN SUCCESS! Current user: ", res.profileObj)
         let data = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/user?username=${res.profileObj.googleId}`)
-        const { user_id } = await data.json()
-        console.log(user_id)
+        let { user_id } = await data.json()
+        
         if (user_id === "None") {
-            console.log(res.profileObj.googleId)
             data = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/user`, {
                 method: 'POST',
                 mode: 'cors',
@@ -136,12 +132,18 @@ const InfoProvider = (props) => {
                 }),
                 cache: 'default'
             })
-
             const { message } = await data.json()
             console.log(message)
+
+            let new_data = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/user?username=${res.profileObj.googleId}`);
+            let { user_id } = await new_data.json()
+            setUser_id(user_id)
+            set_logged_in(true)
         }
-        setUser_id(user_id)
-        set_logged_in(true)
+        else{
+            setUser_id(user_id)
+            set_logged_in(true)
+        }
     }
 
     return (

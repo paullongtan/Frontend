@@ -216,6 +216,7 @@ const Seat = () => {
                             backgroundColor: theme.palette.primary.dark
                         }
                     }}
+                    disabled={booked}
                     onClick={() => { clearSeat() }}
                 >重設場次</Button>
                 <Button 

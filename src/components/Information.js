@@ -36,7 +36,7 @@ const Information = () => {
                         <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '95%' }}>
                             <h3>電影簡介:</h3>
                         </div>
-                        <div style={{ overflow: 'auto', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '90%' }}>{info.description}</div>
+                        <div style={{ overflow: 'auto', display: 'flex', width: '90%' }}>{info.description}</div>
                     </div>
                 </div>
             </div>

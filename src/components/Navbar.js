@@ -8,7 +8,7 @@ const CLIENT_ID = process.env.REACT_APP_CLIENT_ID
 
 const Navbar = () => {
     const navigate = useNavigate()
-    const { logged_in, user_id, onFailure, onLogoutSuccess, onSuccess } = useInfo();
+    const { logged_in, onFailure, onLogoutSuccess, onSuccess } = useInfo();
 
     return (
         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
