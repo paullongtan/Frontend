@@ -100,7 +100,9 @@ const User = () => {
                         </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                        {reservations.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => (
+                        {   
+                            reservations && reservations.length > 0 ?
+                            reservations.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => (
                             <StyledTableRow
                             key={`row ${i}`}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -116,7 +118,7 @@ const User = () => {
                                     ))}</StyledTableCell>
                                 <StyledTableCell align="center">{row.cinema_id}</StyledTableCell>
                             </StyledTableRow>
-                        ))}
+                        )) : <></>}
                     </TableBody>
                 </Table>
             </TableContainer>
