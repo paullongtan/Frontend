@@ -49,12 +49,14 @@ const InfoProvider = (props) => {
     const getReservers = async(user_id) => {
         try{
             const { data: {reservations} } = await instance.get('/user/reservations', {params: {user_id}});
+            console.log(reservations)
             let length = reservations.length
             let bookData = []
             for (let i = 0; i < length; i++){
                 let booking = { seats: [...reservations[i].seats], title: reservations[i].showtime.movie.title, movie_start_time: reservations[i].showtime.movie_start_time, cinema_id: reservations[i].showtime.cinema_id }
                 bookData.push({...booking})
             }
+            console.log(bookData)
             return bookData
         }catch(err){
             return {}
