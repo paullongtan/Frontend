@@ -119,7 +119,7 @@ const InfoProvider = (props) => {
         if (user_id === "None") {
             data = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/user`, {
                 method: 'POST',
-                mode: 'cors',
+                // mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*',
